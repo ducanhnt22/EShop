@@ -13,4 +13,10 @@
     <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EShop.UserService\src\EShop.UserService.API\EShop.UserService.API.csproj" />
+    <ProjectReference Include="..\EShop.ProductService\src\EShop.ProductService.API\EShop.ProductService.API.csproj" />
+    <ProjectReference Include="..\EShop.OrderService\src\EShop.OrderService.API\EShop.OrderService.API.csproj" />
+  </ItemGroup>
+
 </Project>
