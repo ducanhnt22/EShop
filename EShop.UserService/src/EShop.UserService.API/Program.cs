@@ -1,4 +1,9 @@
+﻿using EShop.UserService.API.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureDatabase(builder.Configuration);
+builder.Services.ConfigureIdentity();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -12,6 +17,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
