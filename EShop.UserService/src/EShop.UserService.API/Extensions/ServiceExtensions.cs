@@ -15,7 +15,7 @@ namespace EShop.UserService.API.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
         }

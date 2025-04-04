@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.3.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.3.1" />
@@ -30,7 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EShop.UserService.Application\EShop.UserService.Application.csproj" />
-    <ProjectReference Include="..\EShop.UserService.Infrastructure\EShop.UserService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
