@@ -28,4 +28,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+await app.SeedDatabaseAsync();
+
 app.Run();
