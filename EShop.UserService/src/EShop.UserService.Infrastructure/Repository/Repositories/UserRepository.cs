@@ -17,6 +17,19 @@ public class UserRepository : IUserRepository
         _userDbContext = userDbContext;
     }
 
+    public async Task<List<User>> GetAllAsync()
+    {
+        return await _userDbContext.Users
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<User?> GetById(Guid id)
+    {
+        return await _userDbContext.Users
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
     public async Task<User?> GetByPhone(string phoneNumber)
     {
         return await _userDbContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);

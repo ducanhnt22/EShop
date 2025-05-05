@@ -11,5 +11,7 @@ namespace EShop.UserService.Infrastructure.Repository.IRepositories
     public interface IUserRepository
     {
         public Task<User> GetByPhone(string phoneNumber);
+        public Task<User> GetById(Guid id);
+        public Task<List<User>> GetAllAsync();
     }
 }

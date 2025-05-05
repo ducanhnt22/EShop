@@ -34,10 +34,16 @@ public class CreateUserHandler(IUnitOfWorks unitOfWorks, UserManager<User> userM
             PhoneNumber = request.PhoneNumber,
             Email = request.Email,
             UserName = request.PhoneNumber,
+            Address = request.Address,
         };
         var result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)
         {
+            var roleResult = await _userManager.AddToRoleAsync(user, "Customer");
+            if (!roleResult.Succeeded)
+            {
+                throw new AppExceptions("Failed to assign default role to the user.");
+            }
             return new RegisterUserResponse(user.Id, "User created successfully", user.FullName, user.PhoneNumber);
         }
         else

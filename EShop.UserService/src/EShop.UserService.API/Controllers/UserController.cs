@@ -1,4 +1,6 @@
 ﻿using EShop.UserService.Application.Features.Users.Commands.Create;
+using EShop.UserService.Application.Features.Users.Commands.Update;
+using EShop.UserService.Application.Features.Users.Queries.GetAll;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +18,19 @@ public class UserController : DefaultController
     public async Task<IActionResult> AddNewCustomer([FromBody] CreateUserCommand command)
     {
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+    [HttpPatch("{Id:guid}")]
+    public async Task<IActionResult> UpdateCustomer([FromRoute] Guid Id, [FromBody] UpdateUserCommand command)
+    {
+        command.Id = Id;
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetAllCustomer()
+    {
+        var result = await _mediator.Send(new GetAllUsersQuery());
         return Ok(result);
     }
 }

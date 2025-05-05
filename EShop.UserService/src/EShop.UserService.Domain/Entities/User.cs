@@ -10,6 +10,7 @@ namespace EShop.UserService.Domain.Entities
     public class User : IdentityUser<Guid>
     {
         public string FullName { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
         public override string UserName
         {
             get => base.UserName!;

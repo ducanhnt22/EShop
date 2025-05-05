@@ -1,6 +1,8 @@
 ﻿using EShop.UserService.Domain.Entities;
 using EShop.UserService.Infrastructure.Configurations;
+using EShop.UserService.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace EShop.UserService.API.Extensions
 {
@@ -10,6 +12,11 @@ namespace EShop.UserService.API.Extensions
         {
             using var scope = applicationBuilder.ApplicationServices.CreateScope();
             var services = scope.ServiceProvider;
+
+            // Apply migrations
+            var dbContext = services.GetRequiredService<UserDbContext>();
+            await dbContext.Database.MigrateAsync();
+
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
             var userManager = services.GetRequiredService<UserManager<User>>();
 
