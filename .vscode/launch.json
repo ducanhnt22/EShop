@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Stalker",
+            "type": "stalker",
+            "request": "launch",
+            "vars": {
+                "framework": "net9.0",
+                "projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
+                "projectName": "CHANGE_ME"
+            },
+            "project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
+            "process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
+            "cwd": "\\${var:projectDir}",
+            "url": "http://localhost:5001",
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        }
+    ]
+}

@@ -1,4 +1,6 @@
-﻿using EShop.UserService.Infrastructure.Repository.IRepositories;
+﻿using EShop.UserService.Application.Common.Authentication;
+using EShop.UserService.Infrastructure.Authentication;
+using EShop.UserService.Infrastructure.Repository.IRepositories;
 using EShop.UserService.Infrastructure.Repository.Repositories;
 using EShop.UserService.Infrastructure.UnitOfWork.IUnitOfWorkSetup;
 using EShop.UserService.Infrastructure.UnitOfWork.UnitOfWorkSetup;
@@ -16,6 +18,7 @@ namespace EShop.UserService.Infrastructure
         public static object AddInfrastructureDI(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IUnitOfWorks, UnitOfWorks>();
             return services;
         }

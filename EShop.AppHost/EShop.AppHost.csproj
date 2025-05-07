@@ -1,22 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0"/>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>
     <UserSecretsId>dec9760b-4087-4200-9169-1b729769d442</UserSecretsId>
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.2.1" />
+		<PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.2.2" />
+		<PackageReference Include="Aspire.Hosting.Redis" Version="8.2.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EShop.UserService\src\EShop.UserService.API\EShop.UserService.API.csproj" />
-    <ProjectReference Include="..\EShop.ProductService\src\EShop.ProductService.API\EShop.ProductService.API.csproj" />
-    <ProjectReference Include="..\EShop.OrderService\src\EShop.OrderService.API\EShop.OrderService.API.csproj" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\EShop.UserService\src\EShop.UserService.API\EShop.UserService.API.csproj" />
+		<ProjectReference Include="..\EShop.ProductService\src\EShop.ProductService.API\EShop.ProductService.API.csproj" />
+		<ProjectReference Include="..\EShop.OrderService\src\EShop.OrderService.API\EShop.OrderService.API.csproj" />
+	</ItemGroup>
 </Project>

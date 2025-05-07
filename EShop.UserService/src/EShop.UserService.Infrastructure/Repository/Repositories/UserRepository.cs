@@ -34,4 +34,9 @@ public class UserRepository : IUserRepository
     {
         return await _userDbContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
     }
+
+    public void Update(object user)
+    {
+        throw new NotImplementedException();
+    }
 }
