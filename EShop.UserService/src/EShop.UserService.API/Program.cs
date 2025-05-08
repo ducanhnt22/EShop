@@ -1,10 +1,14 @@
 ﻿using EShop.UserService.API.Extensions;
 using EShop.UserService.Application;
 using EShop.UserService.Infrastructure;
+using EShop.UserService.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureDatabase(builder.Configuration);
+//builder.AddNpgsqlDbContext<UserDbContext>("eshop-user");
+
 builder.Services.AddApplicationDI();
 builder.Services.AddInfrastructureDI();
 

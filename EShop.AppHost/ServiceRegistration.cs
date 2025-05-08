@@ -11,9 +11,11 @@ public static class ServiceRegistration
 {
     public static void RegisterServices(IDistributedApplicationBuilder builder)
     {
-        var userDb = builder.AddPostgres("UserDbConnection").AddDatabase("eshop-user");
-        var orderDb = builder.AddPostgres("OrderDbConnection").AddDatabase("eshop-order");
-        var productDb = builder.AddPostgres("ProductDbConnection").AddDatabase("eshop-product");
+        var dbPassword = builder.AddParameter("DbPassword", "AnhSE160517@");
+        var dbServer = builder.AddPostgres("EShopDb", password: dbPassword, port: 5433);
+        var userDb = dbServer.AddDatabase("eshop-user");
+        var orderDb = dbServer.AddDatabase("eshop-order");
+        var productDb = dbServer.AddDatabase("eshop-product");
 
         var cache = builder.AddRedis("CacheConnection");
 
@@ -21,10 +23,10 @@ public static class ServiceRegistration
                .WithReference(userDb).WithReference(cache).WaitFor(userDb).WaitFor(cache);
 
         builder.AddProject<Projects.EShop_OrderService_API>("orderservice")
-               .WithReference(orderDb);
+               .WithReference(orderDb).WithReference(cache).WaitFor(orderDb).WaitFor(cache);
 
         builder.AddProject<Projects.EShop_ProductService_API>("productservice")
-               .WithReference(productDb);
+               .WithReference(productDb).WithReference(cache).WaitFor(productDb).WaitFor(cache);
 
     }
 }

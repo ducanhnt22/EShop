@@ -10,7 +10,7 @@ namespace EShop.UserService.API.Extensions
         public static void ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<UserDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("LocalConnections")));
+                options.UseNpgsql(configuration.GetConnectionString("AspireEShopUserDB")));
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)
