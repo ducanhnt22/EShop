@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureDatabase(builder.Configuration);
-//builder.AddNpgsqlDbContext<UserDbContext>("eshop-user");
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddCorsPolicy(builder.Configuration);
+builder.Services.AddSwaggerWithJwt();
 
 builder.Services.AddApplicationDI();
 builder.Services.AddInfrastructureDI();
@@ -28,6 +30,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCustomMiddlewares();
+app.UseCors("AllowGateway");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

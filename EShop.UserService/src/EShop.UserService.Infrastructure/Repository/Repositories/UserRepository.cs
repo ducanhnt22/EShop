@@ -35,8 +35,13 @@ public class UserRepository : IUserRepository
         return await _userDbContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
     }
 
+    public Task<User> GetByRefreshToken(string refreshToken)
+    {
+        return _userDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.RefreshToken == refreshToken);
+    }
+
     public void Update(object user)
     {
-        throw new NotImplementedException();
+        _userDbContext.Users.Update((User)user);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EShop.UserService.Domain.Entities;
+using EShop.UserService.Infrastructure.Authentication;
 using EShop.UserService.Infrastructure.UnitOfWork.IUnitOfWorkSetup;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -12,28 +13,27 @@ namespace EShop.UserService.Application.Features.Auths.Commands.RefreshToken
 {
     public sealed record RefreshTokenCommand(string Token, string RefreshToken) : IRequest<RefreshTokenResponse>;
     public record RefreshTokenResponse(string Token, string RefreshToken, DateTime Expiration);
-    public class RefreshTokenHandler(IUnitOfWorks unitOfWorks, UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager) : IRequestHandler<RefreshTokenCommand, RefreshTokenResponse>
+    public class RefreshTokenHandler(IUnitOfWorks unitOfWorks, UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<RefreshTokenCommand, RefreshTokenResponse>
     {
         private readonly IUnitOfWorks _unitOfWorks = unitOfWorks;
         private readonly UserManager<User> _userManager = userManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager = roleManager;
-        public Task<RefreshTokenResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+        public async Task<RefreshTokenResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-            // Validate the refresh token and get the user
-            //var user = _unitOfWorks.UserRepository.GetByRefreshToken(request.RefreshToken);
-            //if (user == null)
-            //{
-            //    throw new Exception("Invalid refresh token");
-            //}
-            //// Generate new tokens
-            //var newToken = GenerateToken(user);
-            //var newRefreshToken = GenerateRefreshToken();
-            //// Update the user's refresh token in the database
-            //user.RefreshToken = newRefreshToken;
-            //_unitOfWorks.UserRepository.Update(user);
-            //_unitOfWorks.SaveChangeAsync();
-            //return Task.FromResult(new RefreshTokenResponse(newToken, newRefreshToken, DateTime.UtcNow.AddHours(1)));
+            var user = await _unitOfWorks.UserRepository.GetByRefreshToken(request.RefreshToken);
+            if (user == null)
+            {
+                throw new Exception("Invalid refresh token");
+            }
+
+            var newToken = _jwtTokenGenerator.GenerateJwtToken(user);
+            var newRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            _unitOfWorks.UserRepository.Update(user);
+            await _unitOfWorks.SaveChangeAsync();
+            return await Task.FromResult(new RefreshTokenResponse(newToken, newRefreshToken, DateTime.UtcNow.AddHours(1)));
         }
     }
 }
