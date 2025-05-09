@@ -33,6 +33,7 @@ public static class ServiceRegistration
         builder.AddProject<Projects.EShop_RabbitMQReceivers>("rabbitmqreceiver")
                .WithReference(rabbit).WaitFor(rabbit);
 
+        //Projects
         builder.AddProject<Projects.EShop_UserService_API>("userservice")
                .WithReference(userDb).WithReference(cache).WaitFor(userDb).WaitFor(cache);
 
