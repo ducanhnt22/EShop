@@ -11,11 +11,15 @@
 
 	<ItemGroup>
 		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.2.1" />
+		<PackageReference Include="Aspire.Hosting.Kafka" Version="9.2.1" />
 		<PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.2.1" />
+		<PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.2.1" />
 		<PackageReference Include="Aspire.Hosting.Redis" Version="9.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\EShop.RabbitMQConsumers\EShop.RabbitMQReceivers.csproj" />
+		<ProjectReference Include="..\Eshop.RabbitMQSenders\Eshop.RabbitMQSenders.csproj" />
 		<ProjectReference Include="..\EShop.UserService\src\EShop.UserService.API\EShop.UserService.API.csproj" />
 		<ProjectReference Include="..\EShop.ProductService\src\EShop.ProductService.API\EShop.ProductService.API.csproj" />
 		<ProjectReference Include="..\EShop.OrderService\src\EShop.OrderService.API\EShop.OrderService.API.csproj" />

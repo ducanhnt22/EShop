@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Npgsql" Version="9.2.1" />
     <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.1" />
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
@@ -29,6 +30,7 @@
 	</PackageReference>
 	<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.3" />
 	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+	<PackageReference Include="ZiggyCreatures.FusionCache" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>

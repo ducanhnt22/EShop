@@ -1,4 +1,5 @@
 ﻿using EShop.UserService.Application.Features.Auths.Commands.Login;
+using EShop.UserService.Application.Features.Auths.Commands.RefreshToken;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,10 +19,11 @@ public class AuthController : DefaultController
         var result = await _mediator.Send(command);
         return Ok(result);
     }
-    //[HttpPost("register")]
-    //public async Task<IActionResult> Register([FromBody] RegisterCommand command)
-    //{
-    //    var result = await _mediator.Send(command);
-    //    return Ok(result);
-    //}
+    [HttpGet("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromQuery] string token, [FromQuery] string refreshToken)
+    {
+        var command = new RefreshTokenCommand(token, refreshToken);
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
 }
