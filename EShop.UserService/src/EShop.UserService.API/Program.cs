@@ -5,8 +5,11 @@ using EShop.UserService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.AddServiceDefaults();
 builder.Services.ConfigureDatabase(builder.Configuration);
+builder.Services.AddOutputCache();
+builder.AddRedisDistributedCache(connectionName: "CacheConnection");
+
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddSwaggerWithJwt();
@@ -28,6 +31,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseOutputCache();
+app.MapDefaultEndpoints();
 
 app.UseCustomMiddlewares();
 app.UseCors("AllowGateway");

@@ -1,11 +1,4 @@
-﻿using Aspire.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EShop.AppHost;
+﻿namespace EShop.AppHost;
 
 public static class ServiceRegistration
 {
@@ -33,14 +26,37 @@ public static class ServiceRegistration
         builder.AddProject<Projects.EShop_RabbitMQReceivers>("rabbitmqreceiver")
                .WithReference(rabbit).WaitFor(rabbit);
 
+        //Kafka
+        var kafka = builder.AddKafka("kafka", port: 9092)
+                        .WithKafkaUI(kafkaUI => kafkaUI.WithHostPort(9100));
+
         //Projects
-        builder.AddProject<Projects.EShop_UserService_API>("userservice")
-               .WithReference(userDb).WithReference(cache).WaitFor(userDb).WaitFor(cache);
+        var userApi = builder.AddProject<Projects.EShop_UserService_API>("userservice")
+                       .WithReference(userDb)
+                       .WithReference(cache)
+                       .WithReference(rabbit)
+                       .WithReference(kafka)
+                       .WaitFor(userDb)
+                       .WaitFor(cache);
+        //Custom endpoint to access the Swagger UI
+        userApi.WithUrl($"{userApi.GetEndpoint("https")}/swagger/index.html", "User Portal");
 
-        builder.AddProject<Projects.EShop_OrderService_API>("orderservice")
-               .WithReference(orderDb).WithReference(cache).WaitFor(orderDb).WaitFor(cache);
+        var orderApi = builder.AddProject<Projects.EShop_OrderService_API>("orderservice")
+                              .WithReference(orderDb)
+                              .WithReference(cache)
+                              .WithReference(rabbit)
+                              .WithReference(kafka)
+                              .WaitFor(orderDb)
+                              .WaitFor(cache);
+        orderApi.WithUrl($"{orderApi.GetEndpoint("https")}/swagger/index.html", "Order Portal");
 
-        builder.AddProject<Projects.EShop_ProductService_API>("productservice")
-               .WithReference(productDb).WithReference(cache).WaitFor(productDb).WaitFor(cache);
+        var productApi = builder.AddProject<Projects.EShop_ProductService_API>("productservice")
+                                .WithReference(productDb)
+                                .WithReference(cache)
+                                .WithReference(rabbit)
+                                .WithReference(kafka)
+                                .WaitFor(productDb)
+                                .WaitFor(cache);
+        productApi.WithUrl($"{productApi.GetEndpoint("https")}/swagger/index.html", "Product Portal");
     }
 }

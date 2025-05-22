@@ -1,6 +1,7 @@
 ﻿using EShop.UserService.Application.Common.Exceptions;
 using EShop.UserService.Application.Features.Users.Responses;
 using EShop.UserService.Domain.Entities;
+using EShop.UserService.Infrastructure.Emails;
 using EShop.UserService.Infrastructure.UnitOfWork.IUnitOfWorkSetup;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -12,10 +13,11 @@ using System.Threading.Tasks;
 
 namespace EShop.UserService.Application.Features.Users.Commands.Create;
 public sealed record CreateUserCommand(string PhoneNumber, string Password, string FullName, string? Email, string? Address) : IRequest<RegisterUserResponse>;
-public class CreateUserHandler(IUnitOfWorks unitOfWorks, UserManager<User> userManager) : IRequestHandler<CreateUserCommand, RegisterUserResponse>
+public class CreateUserHandler(IUnitOfWorks unitOfWorks, UserManager<User> userManager, IEmailService emailService) : IRequestHandler<CreateUserCommand, RegisterUserResponse>
 {
     private readonly IUnitOfWorks _unitOfWorks = unitOfWorks;
     private readonly UserManager<User> _userManager = userManager;
+    private readonly IEmailService _emailService = emailService;
     public async Task<RegisterUserResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var checkPhoneExist = await _unitOfWorks.UserRepository.GetByPhone(request.PhoneNumber);
@@ -44,6 +46,11 @@ public class CreateUserHandler(IUnitOfWorks unitOfWorks, UserManager<User> userM
             {
                 throw new AppExceptions("Failed to assign default role to the user.");
             }
+
+            var subject = "Welcome to EShop";
+            var body = $"<h1>Hello {user.FullName},</h1><p>Your Otp is: </p>";
+            await _emailService.SendEmailAsync(user.Email, subject, body);
+
             return new RegisterUserResponse(user.Id, "User created successfully", user.FullName, user.PhoneNumber);
         }
         else

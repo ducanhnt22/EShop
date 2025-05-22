@@ -1,4 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -12,6 +13,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapDefaultEndpoints();
 app.UseAuthorization();
 app.MapControllers();
 

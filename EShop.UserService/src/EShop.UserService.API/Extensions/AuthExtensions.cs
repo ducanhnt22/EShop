@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using EShop.UserService.API.Infrastructures;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -15,7 +16,11 @@ namespace EShop.UserService.API.Extensions
             var issuer = configuration["JwtSettings:Issuer"];
             var audience = configuration["JwtSettings:Audience"];
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
@@ -29,6 +34,20 @@ namespace EShop.UserService.API.Extensions
                         ValidIssuer = issuer,
                         ValidAudience = audience,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnChallenge = context =>
+                        {
+                            context.HandleResponse();
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            context.Response.ContentType = "application/json";
+                            var result = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                            {
+                                message = "You need to log in to access this resource."
+                            });
+                            return context.Response.WriteAsync(result);
+                        }
                     };
                 });
 
@@ -60,15 +79,17 @@ namespace EShop.UserService.API.Extensions
                     Title = "EShop User Service API",
                     Version = "v1"
                 });
-
+                c.EnableAnnotations();
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "Enter only your JWT token below.",
-                    Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
+                    Description = "Please enter a valid JWT token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer",
                 });
+                c.OperationFilter<AuthorizeOperationFilter>();
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
@@ -86,6 +107,7 @@ namespace EShop.UserService.API.Extensions
                     }
                 });
             });
+            services.AddDataProtection();
         }
     }
 }

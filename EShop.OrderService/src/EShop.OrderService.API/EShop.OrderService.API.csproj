@@ -15,6 +15,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj" />
     <ProjectReference Include="..\EShop.OrderService.Application\EShop.OrderService.Application.csproj" />
     <ProjectReference Include="..\EShop.OrderService.Infrastructure\EShop.OrderService.Infrastructure.csproj" />
   </ItemGroup>
