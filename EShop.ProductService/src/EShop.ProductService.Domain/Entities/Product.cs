@@ -1,10 +1,10 @@
 using System;
+using EShop.ProductService.Domain.Common;
 
 namespace EShop.ProductService.Domain.Entities;
 
-public class Product
+public class Product : BaseAuditableEntity, ISoftDelete
 {
-    public Guid Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public decimal Price { get; set; }
@@ -12,7 +12,6 @@ public class Product
     public string ImageUrl { get; set; }
     public Guid CategoryId { get; set; }
     public Category Category { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
     public bool IsDeleted { get; set; }
+    public ICollection<ProductVariants> ProductVariants { get; set; } = new List<ProductVariants>();
 } 

@@ -17,14 +17,12 @@ public class OrderRepository : IOrderRepository
     public async Task<Order> GetById(Guid id)
     {
         return await _context.Orders
-            .Include(o => o.OrderItems)
             .FirstOrDefaultAsync(o => o.Id == id && !o.IsDeleted);
     }
 
     public async Task<IEnumerable<Order>> GetAll()
     {
         return await _context.Orders
-            .Include(o => o.OrderItems)
             .Where(o => !o.IsDeleted)
             .ToListAsync();
     }
@@ -32,7 +30,6 @@ public class OrderRepository : IOrderRepository
     public async Task<IEnumerable<Order>> GetByUserId(Guid userId)
     {
         return await _context.Orders
-            .Include(o => o.OrderItems)
             .Where(o => o.UserId == userId && !o.IsDeleted)
             .ToListAsync();
     }
@@ -44,14 +41,12 @@ public class OrderRepository : IOrderRepository
 
     public void Update(Order order)
     {
-        order.UpdatedAt = DateTime.UtcNow;
         _context.Orders.Update(order);
     }
 
     public void Delete(Order order)
     {
         order.IsDeleted = true;
-        order.UpdatedAt = DateTime.UtcNow;
         _context.Orders.Update(order);
     }
 

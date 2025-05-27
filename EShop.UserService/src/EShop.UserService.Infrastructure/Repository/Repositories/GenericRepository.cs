@@ -114,5 +114,22 @@ namespace EShop.UserService.Infrastructure.Repository.Repositories
         {
             return await _dbSet.AsNoTracking().AnyAsync(expression);
         }
+
+        public async Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            return await Task.FromResult(query);
+        }
     }
 }

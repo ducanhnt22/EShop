@@ -1,27 +1,17 @@
 using System;
 using System.Collections.Generic;
+using EShop.OrderService.Domain.Common;
+using EShop.OrderService.Domain.Enums;
 
 namespace EShop.OrderService.Domain.Entities;
 
-public class Order
+public class Order : BaseAuditableEntity, ISoftDelete
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public decimal TotalAmount { get; set; }
-    public string ShippingAddress { get; set; }
-    public string PhoneNumber { get; set; }
+    public string ShippingAddress { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
     public OrderStatus Status { get; set; }
-    public ICollection<OrderItem> OrderItems { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; } = false;
 }
 
-public enum OrderStatus
-{
-    Pending,
-    Processing,
-    Shipped,
-    Delivered,
-    Cancelled
-} 

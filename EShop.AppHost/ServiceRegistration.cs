@@ -10,6 +10,8 @@ public static class ServiceRegistration
         var userDb = dbServer.AddDatabase("eshop-user");
         var orderDb = dbServer.AddDatabase("eshop-order");
         var productDb = dbServer.AddDatabase("eshop-product");
+        var inventoryDb = dbServer.AddDatabase("eshop-inventory");
+        var vendorDb = dbServer.AddDatabase("eshop-vendor");
 
         //Redis
         var redisPassword = builder.AddParameter("RedisPassword", "12345");
@@ -58,5 +60,23 @@ public static class ServiceRegistration
                                 .WaitFor(productDb)
                                 .WaitFor(cache);
         productApi.WithUrl($"{productApi.GetEndpoint("https")}/swagger/index.html", "Product Portal");
+
+        var vendorApi = builder.AddProject<Projects.EShop_VendorService_API>("vendorservice")
+                                .WithReference(vendorDb)
+                                .WithReference(cache)
+                                .WithReference(rabbit)
+                                .WithReference(kafka)
+                                .WaitFor(productDb)
+                                .WaitFor(cache);
+        vendorApi.WithUrl($"{vendorApi.GetEndpoint("https")}/swagger/index.html", "Vendor Portal");
+
+        var inventoryApi = builder.AddProject<Projects.EShop_InventoryService_API>("inventoryservice")
+                                  .WithReference(inventoryDb)
+                                  .WithReference(cache)
+                                  .WithReference(rabbit)
+                                  .WithReference(kafka)
+                                  .WaitFor(inventoryDb)
+                                  .WaitFor(cache);
+        inventoryApi.WithUrl($"{inventoryApi.GetEndpoint("https")}/swagger/index.html", "Inventory Portal");
     }
 }

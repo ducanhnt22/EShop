@@ -9,4 +9,4 @@ public sealed record CreateProductCommand(
     decimal Price,
     int StockQuantity,
     string ImageUrl,
-    Guid CategoryId) : IRequest<ProductResponse>; 
+    Guid CategoryId) : IRequest<Guid>; 

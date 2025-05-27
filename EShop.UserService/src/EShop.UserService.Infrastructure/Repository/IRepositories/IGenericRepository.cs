@@ -22,5 +22,6 @@ namespace EShop.UserService.Infrastructure.Repository.IRepositories
         Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null);
         void Remove(TEntity entity);
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression);
+        Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
     }
 }
