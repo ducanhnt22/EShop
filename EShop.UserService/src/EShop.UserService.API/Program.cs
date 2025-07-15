@@ -1,4 +1,4 @@
-﻿using EShop.UserService.API.Extensions;
+using EShop.UserService.API.Extensions;
 using EShop.UserService.Application;
 using EShop.UserService.Infrastructure;
 using EShop.UserService.Infrastructure.Persistence;
@@ -9,6 +9,14 @@ builder.AddServiceDefaults();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AddOutputCache();
 builder.AddRedisDistributedCache(connectionName: "CacheConnection");
+
+// Enable response compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider>();
+    options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
+});
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
@@ -33,6 +41,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Enable response compression
+app.UseResponseCompression();
+
 app.UseOutputCache();
 app.MapDefaultEndpoints();
 
@@ -42,6 +54,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-await app.SeedDatabaseAsync();
+// Only seed database in development to avoid performance impact
+if (app.Environment.IsDevelopment())
+{
+    await app.SeedDatabaseAsync();
+}
 
 app.Run();
