@@ -4,7 +4,27 @@ using EShop.ProductService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
+
+// Database configuration with connection pooling optimization
 builder.Services.ConfigureDatabase(builder.Configuration);
+
+// Enable output caching for better performance
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder =>
+        builder.Expire(TimeSpan.FromMinutes(5)));
+});
+
+// Add Redis distributed cache
+builder.AddRedisDistributedCache(connectionName: "CacheConnection");
+
+// Enable response compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider>();
+    options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
+});
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
@@ -25,14 +45,26 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseHttpsRedirection();
-//app.UseOutputCache();
+
+// Enable response compression
+app.UseResponseCompression();
+
+// Enable output caching
+app.UseOutputCache();
+
+// Map default endpoints only once
 app.MapDefaultEndpoints();
 
 app.UseCustomMiddlewares();
-app.MapDefaultEndpoints();
 app.UseAuthorization();
 app.MapControllers();
-await app.SeedDatabaseAsync();
+
+// Only seed database in development to avoid performance impact
+if (app.Environment.IsDevelopment())
+{
+    await app.SeedDatabaseAsync();
+}
 
 app.Run();
